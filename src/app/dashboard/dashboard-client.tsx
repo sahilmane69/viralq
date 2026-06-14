@@ -15,6 +15,7 @@ import {
   Progress,
   useDisclosure,
 } from "@heroui/react";
+import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
 const menuItems = [
@@ -102,19 +103,8 @@ function NavIcon({ name }: { name: string }) {
 function Brand() {
   return (
     <Link className="flex items-center gap-3 text-slate-950" href="/">
-      <span className="grid size-9 place-items-center rounded-xl bg-blue-600 text-white">
-        <svg
-          aria-hidden="true"
-          className="size-5"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="m5 7 4 10 3-7 3 7 4-10" />
-        </svg>
+      <span className="grid size-9 place-items-center overflow-hidden rounded-xl bg-blue-600">
+        <Image alt="" className="size-full object-cover" height={36} src="/viralq-logo.png" width={36} />
       </span>
       <span className="font-semibold">ViralIQ</span>
     </Link>

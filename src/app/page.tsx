@@ -1,5 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { Button, Card, CardBody, Chip, Link } from "@heroui/react";
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { getReportByAnalysis, listAnalyses } from "@/lib/supabase/database";
 import type { Analysis } from "@/lib/supabase/database";
@@ -271,8 +272,8 @@ export default async function Home() {
             <CardBody className="p-0">
               <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="grid size-9 place-items-center rounded-lg bg-slate-950 text-xs font-bold text-white">
-                    VI
+                  <div className="grid size-9 place-items-center overflow-hidden rounded-lg bg-blue-600">
+                    <Image alt="" className="size-full object-cover" height={36} src="/viralq-logo.png" width={36} />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-slate-900">

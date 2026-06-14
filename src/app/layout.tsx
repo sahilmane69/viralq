@@ -8,6 +8,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ViralIQ | AI Video Intelligence",
   description: "Analyze short-form videos with AI and turn creative signals into action.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 type RootLayoutProps = {
