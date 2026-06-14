@@ -19,11 +19,11 @@ import {
 import { useState, type ReactNode } from "react";
 
 const menuItems = [
-  { label: "Dashboard", icon: "dashboard" },
-  { label: "New Analysis", icon: "plus" },
-  { label: "History", icon: "history" },
-  { label: "Profile", icon: "profile" },
-  { label: "Settings", icon: "settings" },
+  { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
+  { label: "New Analysis", icon: "plus", href: "/dashboard/new-analysis" },
+  { label: "History", icon: "history", href: "/dashboard" },
+  { label: "Profile", icon: "profile", href: "/dashboard" },
+  { label: "Settings", icon: "settings", href: "/dashboard" },
 ];
 
 const recentAnalyses = [
@@ -143,12 +143,14 @@ function SidebarContent({
           const active = activeItem === item.label;
           return (
             <Button
+              as={Link}
               key={item.label}
               className={`h-11 w-full justify-start gap-3 px-3 font-medium ${
                 active
                   ? "bg-blue-50 text-blue-700"
                   : "bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-950"
               }`}
+              href={item.href}
               onPress={() => onSelect(item.label)}
               radius="lg"
               startContent={<NavIcon name={item.icon} />}
@@ -283,7 +285,9 @@ export function DashboardClient({ displayName, initials }: DashboardClientProps)
                 </p>
               </div>
               <Button
+                as={Link}
                 className="w-full bg-blue-600 px-5 font-semibold text-white sm:w-auto"
+                href="/dashboard/new-analysis"
                 radius="lg"
                 startContent={<NavIcon name="plus" />}
               >
@@ -386,7 +390,12 @@ export function DashboardClient({ displayName, initials }: DashboardClientProps)
                     Upload your latest short-form video and get a clear performance report in
                     minutes.
                   </p>
-                  <Button className="mt-6 w-full bg-slate-950 font-semibold text-white" radius="lg">
+                  <Button
+                    as={Link}
+                    className="mt-6 w-full bg-slate-950 font-semibold text-white"
+                    href="/dashboard/new-analysis"
+                    radius="lg"
+                  >
                     Start analysis
                   </Button>
                   <p className="mt-3 text-center text-xs text-slate-400">

@@ -33,14 +33,16 @@ This project uses a Next.js App Router structure with a `src/` directory. As the
 * `src/app/` - Next.js App Router routes, layouts, pages, loading states, error boundaries, and route handlers.
 * `src/app/layout.tsx` - Global layout that wires metadata, fonts, providers, navbar, footer, and the root page shell.
 * `src/app/page.tsx` - Current public SaaS homepage with responsive product, workflow, and insights sections.
-* `src/app/providers.tsx` - Client provider boundary for HeroUI and dark mode theming.
-* `src/app/globals.css` - Tailwind CSS entry point and global light/dark background styles.
+* `src/app/providers.tsx` - Client provider boundary for HeroUI.
+* `src/app/globals.css` - Tailwind CSS entry point and global app styles.
 * `src/app/(auth)/sign-in/[[...sign-in]]/page.tsx` - Clerk-powered sign-in page.
 * `src/app/(auth)/sign-up/[[...sign-up]]/page.tsx` - Clerk-powered sign-up page.
 * `src/app/dashboard/page.tsx` - Protected dashboard experience for uploaded videos, reports, analytics, and account views.
+* `src/app/dashboard/new-analysis/page.tsx` - Protected New Analysis page for video upload context.
+* `src/app/dashboard/new-analysis/new-analysis-form.tsx` - HeroUI form with drag-and-drop video upload, platform, audience, niche, goal, and caption fields.
 * `src/app/api/` - API route handlers for webhooks, background processing endpoints, and external service callbacks when Server Actions are not enough.
 * `src/components/` - Reusable UI components shared across pages and features.
-* `src/components/layout/` - Global layout components such as `Navbar`, `Footer`, and `ThemeToggle`.
+* `src/components/layout/` - Global layout components such as `Navbar` and `Footer`.
 * `src/components/ui/` - HeroUI wrappers, base controls, layout primitives, and design-system-level components.
 * `src/components/dashboard/` - Dashboard-specific visualization, report, upload, and metric components.
 * `src/features/` - Feature modules that group related UI, actions, schemas, and utilities by product area.
@@ -56,7 +58,6 @@ This project uses a Next.js App Router structure with a `src/` directory. As the
 * `src/middleware.ts` - Clerk middleware that protects dashboard routes and redirects unauthenticated users.
 * `supabase/` - Database migrations, generated types, seed data, and storage policy documentation.
 * `docs/` - Longer architecture notes, implementation plans, and product decisions when they outgrow this file.
-* `.env.example` - Environment variable template for local setup.
 * `.env.local` - Local environment variables. Never commit real secrets.
 * `SKILL.md` - Project knowledge base, development guide, and single source of truth.
 
@@ -94,16 +95,17 @@ This project uses a Next.js App Router structure with a `src/` directory. As the
 * `/sign-in` uses Clerk's `SignIn` component.
 * `/sign-up` uses Clerk's `SignUp` component.
 * `/dashboard` is protected by `src/middleware.ts`.
+* `/dashboard/new-analysis` is protected by the same dashboard route matcher.
 * Unauthenticated users who request protected dashboard routes are redirected to `/sign-in`.
-* `Navbar` uses `SignedIn`, `SignedOut`, and `UserButton` to show the correct auth controls.
+* `Navbar` uses Clerk `useUser` and `UserButton` to show the correct auth controls.
 * Google OAuth should be enabled in the Clerk Dashboard for the ViralIQ application. Clerk's prebuilt auth components will display Google sign-in automatically when the provider is enabled.
 
 # Reusable Components
 
-* `Navbar` - Sticky top navigation with brand identity, anchor navigation, dark mode toggle, signed-out auth actions, dashboard link, and Clerk `UserButton`.
+* `Navbar` - Sticky top navigation with brand identity, anchor navigation, signed-out auth actions, dashboard link, and Clerk `UserButton`.
 * `Footer` - Global footer with product positioning and basic legal/contact links.
-* `ThemeToggle` - Client-side dark mode control backed by `next-themes`.
 * `Providers` - Root provider boundary for HeroUI and theme class management.
+* `NewAnalysisForm` - HeroUI form for creating a video analysis request with drag-and-drop upload support.
 
 # AI Architecture
 

@@ -145,7 +145,7 @@ export default function Home() {
             <Button
               as={Link}
               className="h-12 bg-blue-600 px-7 font-semibold text-white shadow-lg shadow-blue-600/20"
-              href="#cta"
+              href="/dashboard/new-analysis"
               radius="lg"
               size="lg"
             >
