@@ -198,13 +198,13 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-slate-900">
-                      Campaign analysis
+                      New analysis
                     </p>
-                    <p className="text-xs text-slate-500">Summer product launch</p>
+                    <p className="text-xs text-slate-500">Upload a video to begin</p>
                   </div>
                 </div>
-                <Chip color="success" size="sm" variant="flat">
-                  Complete
+                <Chip color="primary" size="sm" variant="flat">
+                  Ready
                 </Chip>
               </div>
 
@@ -221,7 +221,7 @@ export default function Home() {
                       </svg>
                     </div>
                     <p className="text-lg font-semibold leading-snug">
-                      The one change that doubled our reach
+                      Your video preview appears here
                     </p>
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/15">
                       <div className="h-full w-1/3 rounded-full bg-blue-500" />
@@ -237,20 +237,20 @@ export default function Home() {
                           ViralIQ score
                         </p>
                         <p className="mt-1 text-4xl font-semibold tracking-tight text-slate-950">
-                          87<span className="text-base text-slate-400">/100</span>
+                          --<span className="text-base text-slate-400">/100</span>
                         </p>
                       </div>
-                      <span className="text-sm font-semibold text-emerald-600">Strong</span>
+                      <span className="text-sm font-semibold text-slate-500">Pending</span>
                     </div>
                     <div className="mt-4 h-2 rounded-full bg-slate-100">
-                      <div className="h-full w-[87%] rounded-full bg-blue-600" />
+                      <div className="h-full w-0 rounded-full bg-blue-600" />
                     </div>
                   </div>
 
                   {[
-                    ["Hook strength", "92%", "w-[92%]"],
-                    ["Pacing", "84%", "w-[84%]"],
-                    ["Visual clarity", "78%", "w-[78%]"],
+                    ["Hook strength", "--", "w-0"],
+                    ["Pacing", "--", "w-0"],
+                    ["Visual clarity", "--", "w-0"],
                   ].map(([label, value, width]) => (
                     <div key={label}>
                       <div className="mb-1.5 flex justify-between text-xs font-medium">
@@ -276,8 +276,7 @@ export default function Home() {
                   <path d="m9 18 6-6-6-6" />
                 </svg>
                 <p className="text-sm leading-6 text-emerald-900">
-                  <strong>Top opportunity:</strong> Move the product reveal 2 seconds earlier to
-                  strengthen the opening payoff.
+                  <strong>Top opportunity:</strong> Your first report will appear after analysis.
                 </p>
               </div>
             </CardBody>
