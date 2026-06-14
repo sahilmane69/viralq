@@ -159,6 +159,7 @@ Supabase stores the core ViralIQ product data in three public tables:
 * `profiles` - One row per Clerk user. The primary key is the Clerk user ID.
 * `analyses` - Video analysis jobs owned by a profile. Tracks title, video URLs, processing status, score, and metadata.
 * `reports` - One structured AI report per analysis. Stores summary text, score breakdowns, recommendations, and the raw JSON payload.
+* Supabase Storage bucket `videos` - Public bucket for uploaded short-form videos.
 
 Schema source:
 
@@ -167,6 +168,8 @@ Schema source:
 * `src/lib/supabase/client.ts` creates an anon Supabase client.
 * `src/lib/supabase/admin.ts` creates a service-role Supabase client for trusted server-side operations only.
 * `src/lib/supabase/database.ts` contains typed helpers for profiles, analyses, and reports.
+* `src/lib/supabase/storage.ts` contains typed helpers for video upload paths, validation, Supabase Storage upload, and public URL generation.
+* `src/app/api/videos/upload/route.ts` handles authenticated video uploads, writes files to Supabase Storage, generates public URLs, and saves those URLs to `analyses.video_url`.
 
 Security decisions:
 
@@ -178,6 +181,7 @@ Security decisions:
 * Row-level security is enabled on all three tables.
 * Users can read their own profiles, analyses, and reports through JWT `sub` matching.
 * Mutations should run through trusted server-side code using the service-role key until a Clerk-to-Supabase JWT template is configured.
+* Video uploads currently post to a protected Next.js endpoint so the service-role key stays server-only. The dashboard uses browser upload progress for the client-to-server transfer.
 
 # Development Rules
 
