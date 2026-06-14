@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { SiteShell } from "@/components/layout/site-shell";
@@ -15,12 +16,14 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="font-sans antialiased">
-        <Providers>
-          <SiteShell>{children}</SiteShell>
-        </Providers>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className="font-sans antialiased">
+          <Providers>
+            <SiteShell>{children}</SiteShell>
+          </Providers>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

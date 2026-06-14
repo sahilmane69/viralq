@@ -1,3 +1,6 @@
+"use client";
+
+import { UserButton, useUser } from "@clerk/nextjs";
 import { Button, Link } from "@heroui/react";
 
 const navigationItems = [
@@ -7,6 +10,8 @@ const navigationItems = [
 ];
 
 export function Navbar() {
+  const { isLoaded, isSignedIn } = useUser();
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl">
       <nav
@@ -44,15 +49,49 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            as={Link}
-            className="hidden bg-blue-600 px-5 font-semibold text-white sm:inline-flex"
-            href="#cta"
-            radius="lg"
-            size="sm"
-          >
-            Get started
-          </Button>
+          {isLoaded && isSignedIn ? (
+            <>
+              <Button
+                as={Link}
+                className="hidden bg-blue-600 px-5 font-semibold text-white sm:inline-flex"
+                href="/dashboard"
+                radius="lg"
+                size="sm"
+              >
+                Dashboard
+              </Button>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "size-9",
+                  },
+                }}
+              />
+            </>
+          ) : null}
+          {isLoaded && !isSignedIn ? (
+            <>
+              <Button
+                as={Link}
+                className="hidden border-slate-300 bg-white/70 px-4 font-semibold text-slate-800 sm:inline-flex"
+                href="/sign-in"
+                radius="lg"
+                size="sm"
+                variant="bordered"
+              >
+                Sign in
+              </Button>
+              <Button
+                as={Link}
+                className="hidden bg-blue-600 px-5 font-semibold text-white sm:inline-flex"
+                href="/sign-up"
+                radius="lg"
+                size="sm"
+              >
+                Sign up
+              </Button>
+            </>
+          ) : null}
         </div>
       </nav>
     </header>

@@ -35,8 +35,9 @@ This project uses a Next.js App Router structure with a `src/` directory. As the
 * `src/app/page.tsx` - Current public SaaS homepage with responsive product, workflow, and insights sections.
 * `src/app/providers.tsx` - Client provider boundary for HeroUI and dark mode theming.
 * `src/app/globals.css` - Tailwind CSS entry point and global light/dark background styles.
-* `src/app/(auth)/` - Authentication screens and Clerk-powered sign-in or sign-up routes.
-* `src/app/(dashboard)/` - Protected dashboard experience for uploaded videos, reports, analytics, and account views.
+* `src/app/(auth)/sign-in/[[...sign-in]]/page.tsx` - Clerk-powered sign-in page.
+* `src/app/(auth)/sign-up/[[...sign-up]]/page.tsx` - Clerk-powered sign-up page.
+* `src/app/dashboard/page.tsx` - Protected dashboard experience for uploaded videos, reports, analytics, and account views.
 * `src/app/api/` - API route handlers for webhooks, background processing endpoints, and external service callbacks when Server Actions are not enough.
 * `src/components/` - Reusable UI components shared across pages and features.
 * `src/components/layout/` - Global layout components such as `Navbar`, `Footer`, and `ThemeToggle`.
@@ -52,8 +53,10 @@ This project uses a Next.js App Router structure with a `src/` directory. As the
 * `src/schemas/` - Validation schemas for forms, API payloads, AI JSON output, and database-facing inputs.
 * `src/hooks/` - Client-side React hooks for UI state and browser-only behavior.
 * `public/` - Static assets served by Next.js.
+* `src/middleware.ts` - Clerk middleware that protects dashboard routes and redirects unauthenticated users.
 * `supabase/` - Database migrations, generated types, seed data, and storage policy documentation.
 * `docs/` - Longer architecture notes, implementation plans, and product decisions when they outgrow this file.
+* `.env.example` - Environment variable template for local setup.
 * `.env.local` - Local environment variables. Never commit real secrets.
 * `SKILL.md` - Project knowledge base, development guide, and single source of truth.
 
@@ -84,9 +87,20 @@ This project uses a Next.js App Router structure with a `src/` directory. As the
 * Keep dashboard views scan-friendly and focused on repeated usage.
 * Avoid decorative UI that makes analysis, comparison, or decision-making harder.
 
+# Authentication Architecture
+
+* Clerk is the authentication provider.
+* `ClerkProvider` wraps the root layout so auth state is available across the app.
+* `/sign-in` uses Clerk's `SignIn` component.
+* `/sign-up` uses Clerk's `SignUp` component.
+* `/dashboard` is protected by `src/middleware.ts`.
+* Unauthenticated users who request protected dashboard routes are redirected to `/sign-in`.
+* `Navbar` uses `SignedIn`, `SignedOut`, and `UserButton` to show the correct auth controls.
+* Google OAuth should be enabled in the Clerk Dashboard for the ViralIQ application. Clerk's prebuilt auth components will display Google sign-in automatically when the provider is enabled.
+
 # Reusable Components
 
-* `Navbar` - Sticky top navigation with brand identity, anchor navigation, dark mode toggle, and primary CTA.
+* `Navbar` - Sticky top navigation with brand identity, anchor navigation, dark mode toggle, signed-out auth actions, dashboard link, and Clerk `UserButton`.
 * `Footer` - Global footer with product positioning and basic legal/contact links.
 * `ThemeToggle` - Client-side dark mode control backed by `next-themes`.
 * `Providers` - Root provider boundary for HeroUI and theme class management.
@@ -123,6 +137,10 @@ Expected responsibilities:
 ```env
 CLERK_SECRET_KEY=
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
+NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/dashboard
 
 SUPABASE_URL=
 SUPABASE_ANON_KEY=
