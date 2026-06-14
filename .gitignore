@@ -14,3 +14,6 @@ pnpm-debug.log*
 bun.lockb
 *.tsbuildinfo
 .DS_Store
+
+# clerk configuration (can include secrets)
+/.clerk/

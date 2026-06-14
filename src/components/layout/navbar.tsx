@@ -1,3 +1,6 @@
+"use client";
+
+import { Show, UserButton } from "@clerk/nextjs";
 import { Button, Link } from "@heroui/react";
 import { ThemeToggle } from "./theme-toggle";
 
@@ -35,15 +38,45 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Button
-            as={Link}
-            className="hidden bg-slate-950 px-5 font-semibold text-white dark:bg-white dark:text-slate-950 sm:inline-flex"
-            href="#upload"
-            radius="full"
-            size="sm"
-          >
-            Start analysis
-          </Button>
+          <Show when="signed-out">
+            <Button
+              as={Link}
+              className="hidden border-slate-300 bg-white/70 px-4 font-semibold text-slate-800 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-100 sm:inline-flex"
+              href="/sign-in"
+              radius="full"
+              size="sm"
+              variant="bordered"
+            >
+              Sign in
+            </Button>
+            <Button
+              as={Link}
+              className="hidden bg-slate-950 px-5 font-semibold text-white dark:bg-white dark:text-slate-950 sm:inline-flex"
+              href="/sign-up"
+              radius="full"
+              size="sm"
+            >
+              Sign up
+            </Button>
+          </Show>
+          <Show when="signed-in">
+            <Button
+              as={Link}
+              className="hidden bg-slate-950 px-5 font-semibold text-white dark:bg-white dark:text-slate-950 sm:inline-flex"
+              href="/dashboard"
+              radius="full"
+              size="sm"
+            >
+              Dashboard
+            </Button>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "size-9",
+                },
+              }}
+            />
+          </Show>
         </div>
       </nav>
     </header>
