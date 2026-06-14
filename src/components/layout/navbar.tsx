@@ -5,9 +5,9 @@ import { Button, Link } from "@heroui/react";
 import { ThemeToggle } from "./theme-toggle";
 
 const navigationItems = [
-  { label: "Product", href: "#product" },
-  { label: "Workflow", href: "#workflow" },
-  { label: "Insights", href: "#insights" },
+  { label: "Features", href: "#features" },
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Pricing", href: "#cta" },
 ];
 
 export function Navbar() {
@@ -18,8 +18,19 @@ export function Navbar() {
         className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
       >
         <Link className="flex items-center gap-3 text-slate-950 dark:text-white" href="/">
-          <span className="grid size-9 place-items-center rounded-xl bg-primary text-sm font-bold text-primary-foreground shadow-soft-xl">
-            VI
+          <span className="grid size-9 place-items-center rounded-xl bg-blue-600 text-white">
+            <svg
+              aria-hidden="true"
+              className="size-5"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="m5 7 4 10 3-7 3 7 4-10" />
+            </svg>
           </span>
           <span className="text-base font-semibold tracking-normal">ViralIQ</span>
         </Link>
