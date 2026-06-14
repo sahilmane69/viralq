@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "./admin";
+import type { VideoAnalysisScore } from "@/lib/openai/service";
 import type { Json, Tables, TablesInsert, TablesUpdate } from "@/types/database";
 
 export type Profile = Tables<"profiles">;
@@ -9,6 +10,11 @@ export type UpsertProfileInput = TablesInsert<"profiles">;
 export type CreateAnalysisInput = Omit<TablesInsert<"analyses">, "profile_id">;
 export type UpdateAnalysisInput = TablesUpdate<"analyses">;
 export type UpsertReportInput = Omit<TablesInsert<"reports">, "profile_id">;
+
+export type SaveOpenAIReportInput = {
+  analysisId: string;
+  report: VideoAnalysisScore;
+};
 
 function assertDatabaseResult<T>(data: T | null, error: { message: string } | null): T {
   if (error) {
@@ -131,6 +137,29 @@ export async function upsertReport(profileId: string, input: UpsertReportInput):
     .single();
 
   return assertDatabaseResult(data, error);
+}
+
+export async function saveOpenAIReport(
+  profileId: string,
+  input: SaveOpenAIReportInput,
+): Promise<Report> {
+  const reportJson = input.report as unknown as Json;
+
+  return upsertReport(profileId, {
+    analysis_id: input.analysisId,
+    summary: [
+      input.report.strengths[0] ? `Strength: ${input.report.strengths[0]}` : null,
+      input.report.weaknesses[0] ? `Weakness: ${input.report.weaknesses[0]}` : null,
+    ]
+      .filter(Boolean)
+      .join(" "),
+    hook_score: Math.round(input.report.hookScore),
+    pacing_score: Math.round(input.report.retentionScore),
+    clarity_score: Math.round(input.report.contentQualityScore),
+    share_score: Math.round(input.report.engagementScore),
+    recommendations: input.report.recommendations as unknown as Json,
+    raw_report: reportJson,
+  });
 }
 
 export async function getReportByAnalysis(
