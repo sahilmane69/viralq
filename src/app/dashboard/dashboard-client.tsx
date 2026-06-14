@@ -21,8 +21,6 @@ const menuItems = [
   { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
   { label: "New Analysis", icon: "plus", href: "/dashboard/new-analysis" },
   { label: "History", icon: "history", href: "/dashboard/history" },
-  { label: "Profile", icon: "profile", href: "/dashboard" },
-  { label: "Settings", icon: "settings", href: "/dashboard" },
 ];
 
 type DashboardClientProps = {
@@ -422,22 +420,6 @@ export function DashboardClient({
                               Score
                             </p>
                           </div>
-                          <Button
-                            isIconOnly
-                            aria-label={`Open ${analysis.title}`}
-                            size="sm"
-                            variant="light"
-                          >
-                            <svg
-                              className="size-4 text-slate-500"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="m9 18 6-6-6-6" />
-                            </svg>
-                          </Button>
                         </div>
                       </div>
                       ))}

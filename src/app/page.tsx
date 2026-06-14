@@ -1,8 +1,10 @@
-"use client";
-
+import { currentUser } from "@clerk/nextjs/server";
 import { Button, Card, CardBody, Chip, Link } from "@heroui/react";
-import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { getReportByAnalysis, listAnalyses } from "@/lib/supabase/database";
+import type { Analysis } from "@/lib/supabase/database";
+import type { VideoAnalysisScore } from "@/lib/openai/service";
+import type { Json } from "@/types/database";
 
 const features = [
   {
@@ -108,19 +110,100 @@ function Icon({ children }: { children: ReactNode }) {
   );
 }
 
-export default function Home() {
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function getNumber(value: unknown) {
+  return typeof value === "number" ? Math.round(value) : null;
+}
+
+function parseReport(rawReport: Json): VideoAnalysisScore | null {
+  if (!rawReport || typeof rawReport !== "object" || Array.isArray(rawReport)) {
+    return null;
+  }
+
+  const report = rawReport as Record<string, unknown>;
+
+  return {
+    overallScore: getNumber(report.overallScore) ?? 0,
+    hookScore: getNumber(report.hookScore) ?? 0,
+    engagementScore: getNumber(report.engagementScore) ?? 0,
+    retentionScore: getNumber(report.retentionScore) ?? 0,
+    contentQualityScore: getNumber(report.contentQualityScore) ?? 0,
+    strengths: isStringArray(report.strengths) ? report.strengths : [],
+    weaknesses: isStringArray(report.weaknesses) ? report.weaknesses : [],
+    recommendations: isStringArray(report.recommendations) ? report.recommendations : [],
+    missingElements: isStringArray(report.missingElements) ? report.missingElements : [],
+    improvedScorePrediction: getNumber(report.improvedScorePrediction) ?? 0,
+  };
+}
+
+function getAnalysisSubtitle(analysis: Analysis | null) {
+  if (!analysis?.metadata || typeof analysis.metadata !== "object" || Array.isArray(analysis.metadata)) {
+    return "Upload a video to begin";
+  }
+
+  const fileName = analysis.metadata.original_filename;
+
+  return typeof fileName === "string" && fileName.trim() ? fileName : "Latest analysis";
+}
+
+function getStatusColor(status: Analysis["status"] | null) {
+  if (status === "completed") {
+    return "success";
+  }
+
+  if (status === "failed") {
+    return "danger";
+  }
+
+  return "primary";
+}
+
+function getScoreLabel(score: number | null) {
+  if (score === null) {
+    return "Pending";
+  }
+
+  if (score >= 85) {
+    return "Excellent";
+  }
+
+  if (score >= 70) {
+    return "Good";
+  }
+
+  if (score >= 50) {
+    return "Fair";
+  }
+
+  return "Needs work";
+}
+
+export default async function Home() {
+  const user = await currentUser();
+  const [latestAnalysis] = user ? await listAnalyses(user.id, 1) : [];
+  const latestReport = user && latestAnalysis ? await getReportByAnalysis(user.id, latestAnalysis.id) : null;
+  const report = latestReport ? parseReport(latestReport.raw_report) : null;
+  const currentScore = getNumber(latestAnalysis?.score) ?? (report ? Math.round(report.overallScore) : null);
+  const metricRows = [
+    ["Hook strength", report?.hookScore ?? null],
+    ["Retention", report?.retentionScore ?? null],
+    ["Content quality", report?.contentQualityScore ?? null],
+  ] as const;
+  const topOpportunity =
+    report?.recommendations[0] ??
+    report?.missingElements[0] ??
+    "Your first report will appear after analysis.";
+
   return (
     <div className="overflow-hidden">
       <section
         id="product"
         className="relative mx-auto grid min-h-[700px] w-full max-w-7xl items-center gap-14 px-4 py-20 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:py-24"
       >
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 max-w-2xl"
-          initial={{ opacity: 0, y: 14 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
+        <div className="relative z-10 max-w-2xl">
           <Chip
             classNames={{
               base: "border border-blue-200 bg-blue-50/80 px-1",
@@ -180,14 +263,9 @@ export default function Home() {
               </span>
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="relative"
-          initial={{ opacity: 0, y: 18 }}
-          transition={{ delay: 0.1, duration: 0.55, ease: "easeOut" }}
-        >
+        <div className="relative">
           <div className="absolute -inset-12 -z-10 rounded-full bg-blue-100/60 blur-3xl" />
           <Card className="border border-slate-200 bg-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.35)]">
             <CardBody className="p-0">
@@ -198,13 +276,13 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-slate-900">
-                      New analysis
+                      {latestAnalysis?.title ?? "New analysis"}
                     </p>
-                    <p className="text-xs text-slate-500">Upload a video to begin</p>
+                    <p className="text-xs text-slate-500">{getAnalysisSubtitle(latestAnalysis ?? null)}</p>
                   </div>
                 </div>
-                <Chip color="primary" size="sm" variant="flat">
-                  Ready
+                <Chip color={getStatusColor(latestAnalysis?.status ?? null)} size="sm" variant="flat">
+                  {latestAnalysis?.status ?? "Ready"}
                 </Chip>
               </div>
 
@@ -221,10 +299,13 @@ export default function Home() {
                       </svg>
                     </div>
                     <p className="text-lg font-semibold leading-snug">
-                      Your video preview appears here
+                      {latestAnalysis?.title ?? "Your video preview appears here"}
                     </p>
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/15">
-                      <div className="h-full w-1/3 rounded-full bg-blue-500" />
+                      <div
+                        className="h-full rounded-full bg-blue-500"
+                        style={{ width: `${currentScore ?? 33}%` }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -237,28 +318,32 @@ export default function Home() {
                           ViralIQ score
                         </p>
                         <p className="mt-1 text-4xl font-semibold tracking-tight text-slate-950">
-                          --<span className="text-base text-slate-400">/100</span>
+                          {currentScore ?? "--"}<span className="text-base text-slate-400">/100</span>
                         </p>
                       </div>
-                      <span className="text-sm font-semibold text-slate-500">Pending</span>
+                      <span className="text-sm font-semibold text-slate-500">
+                        {getScoreLabel(currentScore)}
+                      </span>
                     </div>
                     <div className="mt-4 h-2 rounded-full bg-slate-100">
-                      <div className="h-full w-0 rounded-full bg-blue-600" />
+                      <div
+                        className="h-full rounded-full bg-blue-600"
+                        style={{ width: `${currentScore ?? 0}%` }}
+                      />
                     </div>
                   </div>
 
-                  {[
-                    ["Hook strength", "--", "w-0"],
-                    ["Pacing", "--", "w-0"],
-                    ["Visual clarity", "--", "w-0"],
-                  ].map(([label, value, width]) => (
+                  {metricRows.map(([label, value]) => (
                     <div key={label}>
                       <div className="mb-1.5 flex justify-between text-xs font-medium">
                         <span className="text-slate-600">{label}</span>
-                        <span className="text-slate-900">{value}</span>
+                        <span className="text-slate-900">{value === null ? "--" : `${Math.round(value)}%`}</span>
                       </div>
                       <div className="h-1.5 rounded-full bg-slate-100">
-                        <div className={`h-full rounded-full bg-blue-600 ${width}`} />
+                        <div
+                          className="h-full rounded-full bg-blue-600"
+                          style={{ width: `${value ?? 0}%` }}
+                        />
                       </div>
                     </div>
                   ))}
@@ -276,12 +361,12 @@ export default function Home() {
                   <path d="m9 18 6-6-6-6" />
                 </svg>
                 <p className="text-sm leading-6 text-emerald-900">
-                  <strong>Top opportunity:</strong> Your first report will appear after analysis.
+                  <strong>Top opportunity:</strong> {topOpportunity}
                 </p>
               </div>
             </CardBody>
           </Card>
-        </motion.div>
+        </div>
       </section>
 
       <section id="features" className="border-y border-slate-200/80 bg-white py-24">
