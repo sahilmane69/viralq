@@ -5,7 +5,6 @@ import {
   Card,
   CardBody,
   Form,
-  Input,
   Link,
   Progress,
   Select,
@@ -123,7 +122,7 @@ export function NewAnalysisForm() {
     <Form className="grid gap-6" validationBehavior="native" onSubmit={handleSubmit}>
       <Card className="border border-slate-200 shadow-none">
         <CardBody className="p-5 sm:p-6">
-          <Input
+          <input
             ref={fileInputRef}
             accept="video/mp4,video/quicktime,video/webm"
             aria-label="Video upload"
@@ -181,7 +180,12 @@ export function NewAnalysisForm() {
               Upload an MP4, MOV, or WebM file. Choose a short-form video that represents the
               content you want ViralIQ to analyze.
             </p>
-            <Button className="mt-6 bg-blue-600 font-semibold text-white" radius="lg">
+            <Button
+              className="mt-6 bg-blue-600 font-semibold text-white"
+              radius="lg"
+              type="button"
+              onPress={() => fileInputRef.current?.click()}
+            >
               Choose video
             </Button>
             {selectedFile ? (
@@ -255,7 +259,12 @@ export function NewAnalysisForm() {
           />
 
           <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <Button className="font-semibold text-slate-700" radius="lg" variant="light">
+            <Button
+              className="font-semibold text-slate-700"
+              radius="lg"
+              type="button"
+              variant="light"
+            >
               Save draft
             </Button>
             <Button
