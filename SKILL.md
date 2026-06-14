@@ -1,143 +1,147 @@
----
-name: loops-codex-community-hackathon-pune
-description: >-
-  Build for the Codex Community Hackathon - Pune hackathon on Loops House: ideate with the AI
-  mentor, query sponsor knowledge graphs (graph-RAG over their docs), create
-  and update the project submission, save ideation artifacts, and evaluate the
-  project against each sponsor's judging criteria. Use this skill whenever the
-  user mentions Codex Community Hackathon - Pune, this hackathon, its sponsors or bounties,
-  submitting or improving their hackathon project, sponsor docs/SDKs, judging,
-  or asks "what should I build" — even if they never say "loops".
-requires_bin: loops
----
+# Project Overview
 
-# Codex Community Hackathon - Pune — Loops House skill
+ViralIQ is an AI-powered SaaS platform for analyzing short-form video content and turning that analysis into actionable creator insights. Users upload a video, ViralIQ extracts representative frames, analyzes the content with OpenAI, stores the resulting report, and presents the findings in a dashboard.
 
-You are helping a builder compete in ONE hackathon: `codex-community-hackathon-pune`. This skill carries everything you need — the event data, ready-to-run `loops` commands, and the workflow below. Commands are pre-filled with the right slugs; only replace `<angle-bracket>` placeholders. Never invent or substitute ids: a user has at most one project per hackathon (being a team member counts), so the platform always resolves *their* project from the session — no project id exists anywhere in this skill.
+Target users:
 
-The user has no project here yet. Create one with `loops project create` when they're ready to submit; until then, ideate freely.
+* Content creators who want to improve video performance.
+* Social media managers who need repeatable content analysis.
+* Brands and agencies evaluating creative assets before publishing.
+* Growth teams studying what makes content more likely to perform.
 
-## How to work
+Core problem solved:
 
-Follow this sequence — each step's output feeds the next:
+* ViralIQ helps users understand why a video may or may not perform well by converting visual content into structured AI insights, recommendations, and dashboard-ready metrics.
 
-1. **Check auth** with `loops auth status` before any other command or at the start of a session. Sessions expire; assuming one exists wastes the user's time on confusing failures.
-2. **Orient**: read the event data below (stage, deadlines, sponsors). Run `loops project get --hackathonSlug codex-community-hackathon-pune` to see where the user's submission stands.
-3. **Ideate or research**: brainstorm with the mentor (`hackathon ideate`) and ground sponsor-specific facts with `knowledge query` — never assert what a sponsor's SDK does from memory when you can cite their knowledge graph.
-4. **Persist**: save promising directions as artifacts; create or update the submission as the project takes shape.
-5. **Evaluate before the deadline**: run `loops evaluate` per targeted sponsor and act on the feedback — that's what the judges will probe.
+# Tech Stack
 
-Command outputs are structured (add `--json` for machine-readable form) and often end with a **suggested next command (CTA)** — prefer following it over guessing. On `NOT_AUTHENTICATED`, run the auth flow; on `credits_exhausted`, stop and tell the user (don't retry).
+* Next.js 15
+* TypeScript
+* Tailwind CSS
+* HeroUI
+* Framer Motion
+* Clerk Authentication
+* Supabase Database
+* Supabase Storage
+* OpenAI API
+* Vercel
 
-## Authentication
+# Folder Structure
 
-```sh
-loops auth status                        # run FIRST — who am I?
+This project uses a Next.js App Router structure with a `src/` directory. As the app is built, use the following structure as the source of truth:
+
+* `src/app/` - Next.js App Router routes, layouts, pages, loading states, error boundaries, and route handlers.
+* `src/app/layout.tsx` - Global layout that wires metadata, fonts, providers, navbar, footer, and the root page shell.
+* `src/app/page.tsx` - Current public SaaS homepage with responsive product, workflow, and insights sections.
+* `src/app/providers.tsx` - Client provider boundary for HeroUI and dark mode theming.
+* `src/app/globals.css` - Tailwind CSS entry point and global light/dark background styles.
+* `src/app/(auth)/` - Authentication screens and Clerk-powered sign-in or sign-up routes.
+* `src/app/(dashboard)/` - Protected dashboard experience for uploaded videos, reports, analytics, and account views.
+* `src/app/api/` - API route handlers for webhooks, background processing endpoints, and external service callbacks when Server Actions are not enough.
+* `src/components/` - Reusable UI components shared across pages and features.
+* `src/components/layout/` - Global layout components such as `Navbar`, `Footer`, and `ThemeToggle`.
+* `src/components/ui/` - HeroUI wrappers, base controls, layout primitives, and design-system-level components.
+* `src/components/dashboard/` - Dashboard-specific visualization, report, upload, and metric components.
+* `src/features/` - Feature modules that group related UI, actions, schemas, and utilities by product area.
+* `src/lib/` - Shared infrastructure code, clients, helpers, constants, and service integrations.
+* `src/lib/clerk/` - Clerk authentication helpers and user/session utilities.
+* `src/lib/supabase/` - Supabase browser, server, admin, database, and storage clients.
+* `src/lib/openai/` - OpenAI client setup, prompt builders, response parsing, and AI analysis helpers.
+* `src/actions/` - Server Actions for mutations such as uploads, analysis requests, report creation, and account operations.
+* `src/types/` - Shared TypeScript types for database records, AI reports, component props, and domain models.
+* `src/schemas/` - Validation schemas for forms, API payloads, AI JSON output, and database-facing inputs.
+* `src/hooks/` - Client-side React hooks for UI state and browser-only behavior.
+* `public/` - Static assets served by Next.js.
+* `supabase/` - Database migrations, generated types, seed data, and storage policy documentation.
+* `docs/` - Longer architecture notes, implementation plans, and product decisions when they outgrow this file.
+* `.env.local` - Local environment variables. Never commit real secrets.
+* `SKILL.md` - Project knowledge base, development guide, and single source of truth.
+
+# Coding Standards
+
+* TypeScript only.
+* Strict typing is required.
+* Reusable components should be preferred over duplicated UI.
+* No `any` types.
+* Use a modular architecture organized by product feature and shared infrastructure.
+* Server Actions are preferred for trusted mutations and server-side workflows.
+* API routes should be used for webhooks, external callbacks, streaming endpoints, or cases where Server Actions are not appropriate.
+* Use clean naming conventions for files, components, functions, variables, database tables, and environment variables.
+* Keep business logic out of presentation components.
+* Validate all external inputs before using them.
+* Keep service clients isolated in `src/lib/` so integrations remain easy to test and replace.
+
+# UI Guidelines
+
+* Minimal SaaS design.
+* Professional appearance.
+* Consistent spacing.
+* Responsive layouts across mobile, tablet, and desktop.
+* Accessibility friendly interactions, forms, colors, focus states, and semantic markup.
+* Use HeroUI as the primary component foundation.
+* Use Tailwind CSS for layout, spacing, and small visual refinements.
+* Use Framer Motion for purposeful transitions only.
+* Keep dashboard views scan-friendly and focused on repeated usage.
+* Avoid decorative UI that makes analysis, comparison, or decision-making harder.
+
+# Reusable Components
+
+* `Navbar` - Sticky top navigation with brand identity, anchor navigation, dark mode toggle, and primary CTA.
+* `Footer` - Global footer with product positioning and basic legal/contact links.
+* `ThemeToggle` - Client-side dark mode control backed by `next-themes`.
+* `Providers` - Root provider boundary for HeroUI and theme class management.
+
+# AI Architecture
+
+```text
+Video Upload
+-> Frame Extraction
+-> OpenAI Analysis
+-> JSON Report
+-> Dashboard Visualization
 ```
 
-If not authenticated, the CLI isn't installed-and-logged-in yet. Install once with `npm install -g loopshouse`, then offer the user these login options:
+Expected responsibilities:
 
-- **Google**: `loops auth login --provider google` — opens the browser.
-- **GitHub**: `loops auth login --provider github` — opens the browser.
-- **Email one-time code**: `loops auth login --email <you@example.com>` sends a 6-digit code, then `loops auth verify --email <you@example.com> --code <123456>`.
+* Video Upload - Accept user video files, validate file type and size, and store assets in Supabase Storage.
+* Frame Extraction - Extract representative frames from uploaded videos for visual analysis.
+* OpenAI Analysis - Send frame data and structured prompts to the OpenAI API.
+* JSON Report - Parse and validate AI output into a stable report schema.
+* Dashboard Visualization - Render report insights, scores, recommendations, and trends in the authenticated dashboard.
 
-In headless contexts the browser flows print a URL for a human to open. Re-run `loops auth status` to confirm before continuing.
+# Future Features
 
-## Event & sponsor data
+* Thumbnail Analysis
+* Competitor Comparison
+* Viral Trend Detection
+* Caption Generator
+* AI Content Coach
+* Team Workspaces
 
-Your ground truth for this event, as one TOON document (TOON = compact JSON: `key: value` lines; a uniform array renders as a `name[N]{col1,col2,…}:` header followed by one comma-separated row per element):
+# Environment Variables
 
-```toon
-hackathon:
-  slug: codex-community-hackathon-pune
-  name: Codex Community Hackathon - Pune
-  tagline: Welcome to Pune's first OpenAI Codex Community Hackathon.
-  theme: themeTwo
-  stage: registration_open
-  stageMeaning: Registration open — enroll and start ideating
-  timezone: Asia/Katmandu
-  startsAt: "Jun 14, 2026, 11:00 PM (Asia/Katmandu)"
-  submissionDeadline: "Jun 15, 2026, 12:00 AM (Asia/Katmandu)"
-  registrationDeadline: "Jun 14, 2026, 10:00 PM (Asia/Katmandu)"
-  description: "We are moving past the chat interface. This is about architecting the future of software by shifting the focus from writing code to orchestrating agents. Whether you are building a new autonomous tool or accelerating an existing project, this is where the shipping happens. ​Build something new from scratch or push an existing project further using Codex. Run parallel tasks, experiment with Skills, and use worktrees to operate at a higher level of speed and ambition."
-sponsors[1]:
-  - slug: codex
-    name: Codex
-    tier: null
-    prizePoolUsd: null
-    tagline: null
-    website: "https://chatgpt.com/codex/"
-    description: "This event is designed for builders, not just developers. If you have never used Codex (or any agentic coding tools), do not worry. We are all exploring this frontier together. You will build alongside Codex Ambassadors and a room full of peers who are just as curious about the future of software as you are. ​​​​Build Directions ​If any of these ideas excite you, we want you in the room: ​Agentic Coding: Build developer tools that maximize leverage from Codex as an AI coding agent. ​UX for Agentic Applications: Design AI-native interfaces and workflows for agent-driven software. ​Multimodal Intelligence: Create applications that reason across multiple modalities. ​Domain Agents: Build vertic…"
-    requirements: []
-    bounties[3]{name,amountUsd,description}:
-      🥇 1st Place,10000,"$10,000 USD in OpenAI API credits"
-      🥈 2nd Place,5000,"$5,000 USD in OpenAI API credits"
-      🥉 3rd Place,1000,"$1,000 USD in OpenAI API credits"
-    judgingCriteria: []
+```env
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+OPENAI_API_KEY=
 ```
 
-Mind `hackathon.stage` and the deadlines: they are snapshots from when the skill was generated and don't update — sanity-check timing before planning multi-day work.
+# Development Rules
 
-## Credits
+Whenever new features are added:
 
-**1 credit = one ideator turn OR one knowledge-graph query.** Everything else (project/artifact commands, the evaluator prompt) is free. Spend credits on load-bearing questions, not browsing — and check the balance when planning a research burst:
+* Update `SKILL.md`.
+* Document architecture decisions.
+* Document new database tables.
+* Document API routes.
+* Document reusable components.
+* Document new environment variables.
+* Document new third-party integrations.
+* Document important security, storage, or authentication decisions.
 
-```sh
-loops credits --hackathonSlug codex-community-hackathon-pune
-```
-
-## Ideate with the AI mentor
-
-The mentor knows this hackathon's live sponsors, bounties, and judging criteria. Conversations persist locally per hackathon (`~/.loops/sessions/`) and continue automatically — each call just sends one more message, so ask follow-ups freely instead of cramming everything into one prompt.
-
-```sh
-loops hackathon ideate --hackathonSlug codex-community-hackathon-pune -m "<your prompt>"
-loops hackathon ideate --hackathonSlug codex-community-hackathon-pune -m "<follow-up>"               # same conversation
-loops hackathon ideate --hackathonSlug codex-community-hackathon-pune --withProject -m "<prompt>"    # mentor sees the user's project
-loops hackathon ideate --hackathonSlug codex-community-hackathon-pune --new -m "<fresh start>"       # discard the session first
-loops hackathon session --hackathonSlug codex-community-hackathon-pune            # show the stored conversation (--clear to delete)
-```
-
-Use `--withProject` once a project exists — feedback grounded in what's actually built beats generic advice.
-
-## Sponsor knowledge graphs (graph-RAG)
-
-Each sponsor above has a knowledge graph built from their docs, SDKs, and bounty materials. A query returns a **cited evidence block** (entities, relationships, chunks, sources) — read the evidence and compose the answer yourself, citing it. This is how you avoid hallucinating sponsor APIs. 1 credit per query. One ready command per sponsor:
-
-```sh
-# Codex
-loops knowledge query --hackathonSlug codex-community-hackathon-pune -s codex -q "<your question about Codex>"
-```
-
-## Manage the project
-
-A project IS the submission, the user has at most one here, and the platform resolves it from the session — no ids, no listings.
-
-```sh
-loops project get --hackathonSlug codex-community-hackathon-pune       # current state (exists=false if none yet)
-loops project create --hackathonSlug codex-community-hackathon-pune --name "<name>" --repoUrl <url> --tagline "<one-liner>"
-loops project update --hackathonSlug codex-community-hackathon-pune --description "<new description>"
-```
-
-**Update is a PATCH**: only the fields you pass change — an update with just `--tagline` cannot wipe the repo URL or bounty picks. Available fields: `--name`, `--tagline`, `--pitch`, `--description`, `--repoUrl`, `--demoUrl`, `--videoUrl`, `--bountyIds <id> --bountyIds <id>`.
-
-## Ideation artifacts (scratchpad)
-
-Persist ideas, problems, and tech-stack notes against this hackathon — they appear in the user's web playground too, so save anything worth keeping rather than letting it die in the conversation. Kinds: `idea`, `problem`, `tech-stack`, `note`.
-
-```sh
-loops artifact list --hackathonSlug codex-community-hackathon-pune
-loops artifact save --hackathonSlug codex-community-hackathon-pune --name "<title>" --kind idea --body "<markdown body>"
-loops artifact update --hackathonSlug codex-community-hackathon-pune --id <artifactId> --body "<updated markdown>"
-loops artifact remove --hackathonSlug codex-community-hackathon-pune --id <artifactId>
-```
-
-## Evaluate the project against a sponsor
-
-Fetch a self-contained evaluator prompt for one sponsor (free; the user's project record is included automatically), then **execute the prompt yourself inside the project repo** — it assumes the code access you have. It walks that sponsor's judging criteria and bounty requirements and produces alignment feedback: what's genuinely strong, what's missing, where to focus. Run it for every sponsor the project targets, well before the deadline.
-
-```sh
-loops evaluate --hackathonSlug codex-community-hackathon-pune -s <sponsorSlug>
-```
-
-Take sponsor slugs from the TOON data above. Report the feedback to the user, then reflect agreed improvements via `loops project update`.
+`SKILL.md` should remain the single source of truth for the project.
