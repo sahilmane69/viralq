@@ -1,202 +1,371 @@
 "use client";
 
-import { Button } from "@heroui/react";
+import { Button, Card, CardBody, Chip, Link } from "@heroui/react";
 import { motion } from "framer-motion";
+import type { ReactNode } from "react";
 
-const metrics = [
-  { label: "Hook strength", value: "92", tone: "text-emerald-500" },
-  { label: "Retention risk", value: "18", tone: "text-amber-500" },
-  { label: "Share triggers", value: "7", tone: "text-blue-500" },
-];
-
-const workflowSteps = [
-  "Upload a short-form video",
-  "Extract representative frames",
-  "Analyze creative signals with OpenAI",
-  "Review the structured JSON report",
-  "Visualize recommendations in the dashboard",
-];
-
-const insightCards = [
+const features = [
   {
-    title: "Opening frame clarity",
-    description: "Detect whether the first impression communicates a clear visual promise.",
+    icon: (
+      <path d="M4 19V9m5 10V5m5 14v-7m5 7V3" />
+    ),
+    title: "Performance scoring",
+    description:
+      "Get a clear, consistent score for every video across hook strength, pacing, clarity, and share potential.",
   },
   {
-    title: "Pacing and scene shifts",
-    description: "Surface moments where attention may drop before the payoff lands.",
+    icon: (
+      <>
+        <path d="M12 3a6 6 0 0 0-3.8 10.65c.5.4.8.96.8 1.6V16h6v-.75c0-.64.3-1.2.8-1.6A6 6 0 0 0 12 3Z" />
+        <path d="M9 20h6M10 16v1h4v-1" />
+      </>
+    ),
+    title: "Actionable insights",
+    description:
+      "Move beyond raw metrics with focused recommendations your team can apply to the next edit.",
   },
   {
-    title: "Creative recommendations",
-    description: "Turn analysis into prioritized edits for hooks, captions, and thumbnails.",
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="8" />
+        <path d="m12 8 4 4-4 4M8 12h8" />
+      </>
+    ),
+    title: "Faster review cycles",
+    description:
+      "Give editors, strategists, and clients a shared language for creative feedback without another meeting.",
+  },
+  {
+    icon: (
+      <>
+        <path d="M5 20V10m7 10V4m7 16v-7" />
+        <path d="M3 20h18" />
+      </>
+    ),
+    title: "Content benchmarks",
+    description:
+      "Compare creative patterns across your library and see what consistently works for your audience.",
+  },
+  {
+    icon: (
+      <>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="M7 9h4M7 13h7M17 9h.01" />
+      </>
+    ),
+    title: "Structured reports",
+    description:
+      "Turn every analysis into a polished, easy-to-share report that keeps decisions documented.",
+  },
+  {
+    icon: (
+      <>
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+      </>
+    ),
+    title: "Built for teams",
+    description:
+      "Keep creative standards aligned across in-house teams, agencies, and distributed collaborators.",
   },
 ];
+
+const steps = [
+  {
+    number: "01",
+    title: "Upload your video",
+    description: "Add any short-form video from your desktop in a few clicks.",
+  },
+  {
+    number: "02",
+    title: "ViralIQ analyzes it",
+    description: "We evaluate the creative signals that shape viewer attention and response.",
+  },
+  {
+    number: "03",
+    title: "Improve with confidence",
+    description: "Review a prioritized report and turn specific insights into stronger content.",
+  },
+];
+
+function Icon({ children }: { children: ReactNode }) {
+  return (
+    <div className="grid size-11 place-items-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
+      <svg
+        aria-hidden="true"
+        className="size-5"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+        viewBox="0 0 24 24"
+      >
+        {children}
+      </svg>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
     <div className="overflow-hidden">
       <section
         id="product"
-        className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.92fr] lg:px-8 lg:py-20"
+        className="relative mx-auto grid min-h-[700px] w-full max-w-7xl items-center gap-14 px-4 py-20 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:py-24"
       >
-        <div className="max-w-3xl">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-8"
-            initial={{ opacity: 0, y: 18 }}
-            transition={{ duration: 0.55, ease: "easeOut" }}
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 max-w-2xl"
+          initial={{ opacity: 0, y: 14 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <Chip
+            classNames={{
+              base: "border border-blue-200 bg-blue-50/80 px-1 dark:border-blue-800 dark:bg-blue-950/50",
+              content: "font-semibold text-blue-700 dark:text-blue-300",
+            }}
+            radius="full"
+            variant="flat"
           >
-            <div className="space-y-5">
-              <h1 className="max-w-4xl text-4xl font-semibold leading-tight tracking-normal text-slate-950 sm:text-5xl lg:text-6xl dark:text-white">
-                Turn short-form videos into clear AI performance insights.
-              </h1>
-              <p className="max-w-2xl text-base leading-8 text-slate-600 sm:text-lg dark:text-slate-300">
-                ViralIQ helps creators and content teams understand hooks, pacing, visual clarity,
-                and improvement opportunities before a video goes live.
-              </p>
-            </div>
+            Creative intelligence for content teams
+          </Chip>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                className="h-12 bg-primary px-6 text-sm font-semibold text-primary-foreground"
-                radius="full"
-                size="lg"
-              >
-                Analyze a video
-              </Button>
-              <Button
-                className="h-12 border-slate-300 bg-white/70 px-6 text-sm font-semibold text-slate-800 backdrop-blur dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-100"
-                radius="full"
-                size="lg"
-                variant="bordered"
-              >
-                View sample report
-              </Button>
-            </div>
-          </motion.div>
-        </div>
+          <h1 className="mt-6 text-4xl font-semibold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-[4rem] dark:text-white">
+            Know what makes your content{" "}
+            <span className="text-blue-600 dark:text-blue-400">perform.</span>
+          </h1>
+          <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+            ViralIQ turns short-form videos into clear, actionable insights so your team can create
+            stronger content, faster.
+          </p>
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Button
+              as={Link}
+              className="h-12 bg-blue-600 px-7 font-semibold text-white shadow-lg shadow-blue-600/20"
+              href="#cta"
+              radius="lg"
+              size="lg"
+            >
+              Analyze your first video
+            </Button>
+            <Button
+              as={Link}
+              className="h-12 border-slate-300 bg-white px-7 font-semibold text-slate-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              href="#how-it-works"
+              radius="lg"
+              size="lg"
+              variant="bordered"
+            >
+              See how it works
+            </Button>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
+            {["No credit card required", "First analysis free"].map((item) => (
+              <span key={item} className="flex items-center gap-2">
+                <svg
+                  aria-hidden="true"
+                  className="size-4 text-emerald-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="m5 12 4 4L19 6" />
+                </svg>
+                {item}
+              </span>
+            ))}
+          </div>
+        </motion.div>
 
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="relative"
-          initial={{ opacity: 0, y: 22 }}
-          transition={{ delay: 0.12, duration: 0.6, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 18 }}
+          transition={{ delay: 0.1, duration: 0.55, ease: "easeOut" }}
         >
-          <div className="rounded-[2rem] border border-slate-200 bg-white/86 p-4 shadow-soft-xl backdrop-blur dark:border-slate-800 dark:bg-slate-950/82">
-            <div className="rounded-[1.4rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900">
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-slate-950 dark:text-white">
-                    Launch report
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Creator upload analysis
-                  </p>
-                </div>
-                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300">
-                  Ready
-                </span>
-              </div>
-
-              <div className="aspect-[4/3] rounded-3xl bg-slate-950 p-4 text-white">
-                <div className="flex h-full flex-col justify-between rounded-2xl border border-white/10 bg-[linear-gradient(135deg,#1d4ed8_0%,#0f172a_54%,#111827_100%)] p-5">
-                  <div className="flex items-center justify-between text-xs text-white/70">
-                    <span>Frame 04</span>
-                    <span>00:07</span>
+          <div className="absolute -inset-12 -z-10 rounded-full bg-blue-100/60 blur-3xl dark:bg-blue-900/20" />
+          <Card className="border border-slate-200 bg-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950">
+            <CardBody className="p-0">
+              <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+                <div className="flex items-center gap-3">
+                  <div className="grid size-9 place-items-center rounded-lg bg-slate-950 text-xs font-bold text-white dark:bg-white dark:text-slate-950">
+                    VI
                   </div>
                   <div>
-                    <div className="mb-3 h-2 w-24 rounded-full bg-white/35" />
-                    <div className="h-3 w-44 rounded-full bg-white/85" />
-                    <div className="mt-2 h-3 w-32 rounded-full bg-white/50" />
+                    <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                      Campaign analysis
+                    </p>
+                    <p className="text-xs text-slate-500">Summer product launch</p>
                   </div>
+                </div>
+                <Chip color="success" size="sm" variant="flat">
+                  Complete
+                </Chip>
+              </div>
+
+              <div className="grid gap-5 p-5 sm:grid-cols-[0.9fr_1.1fr]">
+                <div className="flex min-h-64 flex-col justify-between rounded-2xl bg-slate-900 p-5 text-white">
+                  <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span>00:08 / 00:24</span>
+                    <span>9:16</span>
+                  </div>
+                  <div>
+                    <div className="mb-5 grid size-12 place-items-center rounded-full bg-white/15 backdrop-blur">
+                      <svg className="ml-0.5 size-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="m8 5 11 7-11 7V5Z" />
+                      </svg>
+                    </div>
+                    <p className="text-lg font-semibold leading-snug">
+                      The one change that doubled our reach
+                    </p>
+                    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/15">
+                      <div className="h-full w-1/3 rounded-full bg-blue-500" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+                    <div className="flex items-end justify-between">
+                      <div>
+                        <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
+                          ViralIQ score
+                        </p>
+                        <p className="mt-1 text-4xl font-semibold tracking-tight text-slate-950 dark:text-white">
+                          87<span className="text-base text-slate-400">/100</span>
+                        </p>
+                      </div>
+                      <span className="text-sm font-semibold text-emerald-600">Strong</span>
+                    </div>
+                    <div className="mt-4 h-2 rounded-full bg-slate-100 dark:bg-slate-800">
+                      <div className="h-full w-[87%] rounded-full bg-blue-600" />
+                    </div>
+                  </div>
+
+                  {[
+                    ["Hook strength", "92%", "w-[92%]"],
+                    ["Pacing", "84%", "w-[84%]"],
+                    ["Visual clarity", "78%", "w-[78%]"],
+                  ].map(([label, value, width]) => (
+                    <div key={label}>
+                      <div className="mb-1.5 flex justify-between text-xs font-medium">
+                        <span className="text-slate-600 dark:text-slate-300">{label}</span>
+                        <span className="text-slate-900 dark:text-white">{value}</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-slate-100 dark:bg-slate-800">
+                        <div className={`h-full rounded-full bg-blue-600 ${width}`} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                {metrics.map((metric) => (
-                  <div
-                    key={metric.label}
-                    className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950"
-                  >
-                    <p className={`text-2xl font-semibold ${metric.tone}`}>{metric.value}</p>
-                    <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-                      {metric.label}
-                    </p>
-                  </div>
-                ))}
+              <div className="mx-5 mb-5 flex gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950/30">
+                <svg
+                  className="mt-0.5 size-5 shrink-0 text-emerald-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+                <p className="text-sm leading-6 text-emerald-900 dark:text-emerald-200">
+                  <strong>Top opportunity:</strong> Move the product reveal 2 seconds earlier to
+                  strengthen the opening payoff.
+                </p>
               </div>
-            </div>
-          </div>
+            </CardBody>
+          </Card>
         </motion.div>
       </section>
 
-      <section
-        id="workflow"
-        className="border-y border-slate-200/80 bg-white/62 px-4 py-16 sm:px-6 lg:px-8 dark:border-slate-800/80 dark:bg-slate-950/52"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-            <div>
-              <h2 className="text-3xl font-semibold tracking-normal text-slate-950 dark:text-white">
-                A focused AI pipeline for video analysis.
-              </h2>
-              <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 dark:text-slate-300">
-                The product architecture follows the path from upload to frame extraction to OpenAI
-                analysis, then stores a structured report for dashboard visualization.
-              </p>
-            </div>
+      <section id="features" className="border-y border-slate-200/80 bg-white py-24 dark:border-slate-800 dark:bg-slate-950">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-blue-600">
+              Everything you need
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
+              Better creative decisions, backed by data
+            </h2>
+            <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
+              Understand what is working, what is not, and what to improve before your next post.
+            </p>
+          </div>
 
-            <div className="grid gap-3">
-              {workflowSteps.map((step, index) => (
-                <div
-                  key={step}
-                  className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950"
-                >
-                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-slate-100 text-sm font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-200">
-                    {index + 1}
-                  </span>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                    {step}
+          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <Card
+                key={feature.title}
+                className="border border-slate-200 bg-white shadow-none transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950"
+              >
+                <CardBody className="p-6">
+                  <Icon>{feature.icon}</Icon>
+                  <h3 className="mt-5 text-lg font-semibold text-slate-950 dark:text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                    {feature.description}
                   </p>
-                </div>
-              ))}
-            </div>
+                </CardBody>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      <section id="insights" className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mb-9 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <h2 className="text-3xl font-semibold tracking-normal text-slate-950 dark:text-white">
-              Insight surfaces built for teams.
-            </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300">
-              Reusable dashboard components will keep reports consistent as analysis features
-              expand into thumbnails, trends, captions, and coaching.
+      <section id="how-it-works" className="py-24">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-blue-600">
+              How it works
             </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
+              From upload to insight in minutes
+            </h2>
           </div>
-          <Button
-            className="w-fit border-slate-300 bg-white/70 font-semibold text-slate-800 dark:border-slate-700 dark:bg-slate-950/50 dark:text-slate-100"
-            radius="full"
-            variant="bordered"
-          >
-            Explore dashboard
-          </Button>
-        </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          {insightCards.map((card) => (
-            <article
-              key={card.title}
-              className="rounded-3xl border border-slate-200 bg-white/82 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/70"
-            >
-              <h3 className="text-lg font-semibold text-slate-950 dark:text-white">{card.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-                {card.description}
-              </p>
-            </article>
-          ))}
+          <div className="relative mt-16 grid gap-8 md:grid-cols-3">
+            <div className="absolute left-[16.6%] right-[16.6%] top-7 hidden border-t border-dashed border-slate-300 md:block dark:border-slate-700" />
+            {steps.map((step) => (
+              <div key={step.number} className="relative text-center">
+                <span className="relative z-10 mx-auto grid size-14 place-items-center rounded-2xl border border-blue-200 bg-white text-sm font-bold text-blue-600 shadow-sm dark:border-blue-800 dark:bg-slate-950">
+                  {step.number}
+                </span>
+                <h3 className="mt-6 text-lg font-semibold text-slate-950 dark:text-white">
+                  {step.title}
+                </h3>
+                <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  {step.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="cta" className="px-4 pb-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-slate-950 px-6 py-16 text-center sm:px-12 dark:bg-blue-950">
+          <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+            Make every video a smarter creative decision.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-slate-300">
+            Join modern content teams using ViralIQ to learn faster and publish with confidence.
+          </p>
+          <Button
+            className="mt-8 h-12 bg-white px-7 font-semibold text-slate-950"
+            radius="lg"
+            size="lg"
+          >
+            Start analyzing for free
+          </Button>
+          <p className="mt-4 text-xs text-slate-400">No credit card required</p>
         </div>
       </section>
     </div>
