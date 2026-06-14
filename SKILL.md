@@ -141,6 +141,7 @@ NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
 NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/dashboard
+CLERK_WEBHOOK_SIGNING_SECRET=
 
 SUPABASE_URL=
 SUPABASE_ANON_KEY=
@@ -148,6 +149,33 @@ SUPABASE_SERVICE_ROLE_KEY=
 
 OPENAI_API_KEY=
 ```
+
+# Database Architecture
+
+Supabase stores the core ViralIQ product data in three public tables:
+
+* `profiles` - One row per Clerk user. The primary key is the Clerk user ID.
+* `analyses` - Video analysis jobs owned by a profile. Tracks title, video URLs, processing status, score, and metadata.
+* `reports` - One structured AI report per analysis. Stores summary text, score breakdowns, recommendations, and the raw JSON payload.
+
+Schema source:
+
+* `supabase/migrations/20260614000000_create_core_tables.sql` defines tables, indexes, updated-at triggers, and RLS policies.
+* `src/types/database.ts` contains generated-style TypeScript database types.
+* `src/lib/supabase/client.ts` creates an anon Supabase client.
+* `src/lib/supabase/admin.ts` creates a service-role Supabase client for trusted server-side operations only.
+* `src/lib/supabase/database.ts` contains typed helpers for profiles, analyses, and reports.
+
+Security decisions:
+
+* Clerk remains the authentication provider.
+* Supabase profile IDs use Clerk user IDs.
+* `profiles.clerk_user_id` stores the Clerk user ID and has a unique index to prevent duplicate profile rows.
+* Clerk `user.created` events are handled by `src/app/api/webhooks/clerk/route.ts`.
+* The webhook verifies Clerk signatures with `verifyWebhook()` before upserting profile data.
+* Row-level security is enabled on all three tables.
+* Users can read their own profiles, analyses, and reports through JWT `sub` matching.
+* Mutations should run through trusted server-side code using the service-role key until a Clerk-to-Supabase JWT template is configured.
 
 # Development Rules
 
