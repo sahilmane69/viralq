@@ -2,7 +2,6 @@
 
 import { UserButton } from "@clerk/nextjs";
 import {
-  Avatar,
   Button,
   Card,
   CardBody,
@@ -21,7 +20,7 @@ import { useState, type ReactNode } from "react";
 const menuItems = [
   { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
   { label: "New Analysis", icon: "plus", href: "/dashboard/new-analysis" },
-  { label: "History", icon: "history", href: "/dashboard" },
+  { label: "History", icon: "history", href: "/dashboard/history" },
   { label: "Profile", icon: "profile", href: "/dashboard" },
   { label: "Settings", icon: "settings", href: "/dashboard" },
 ];
@@ -37,7 +36,6 @@ type DashboardClientProps = {
   averageScore: number | null;
   completedCount: number;
   displayName: string;
-  initials: string;
   monthlyLimit: number;
   totalAnalyses: number;
   usedThisMonth: number;
@@ -211,7 +209,6 @@ export function DashboardClient({
   averageScore,
   completedCount,
   displayName,
-  initials,
   monthlyLimit,
   totalAnalyses,
   usedThisMonth,
@@ -466,8 +463,7 @@ export function DashboardClient({
 
               <Card className="border border-slate-200 shadow-none">
                 <CardBody className="p-6">
-                  <Avatar className="bg-blue-600 text-white" name={initials} />
-                  <h2 className="mt-5 text-lg font-semibold">Analyze a new video</h2>
+                  <h2 className="text-lg font-semibold">Analyze a new video</h2>
                   <p className="mt-2 text-sm leading-6 text-slate-500">
                     Upload your latest short-form video and get a clear performance report in
                     minutes.

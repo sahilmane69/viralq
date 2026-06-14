@@ -24,6 +24,11 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("video");
     const title = formData.get("title");
+    const platform = formData.get("platform");
+    const audience = formData.get("audience");
+    const niche = formData.get("niche");
+    const goal = formData.get("goal");
+    const caption = formData.get("caption");
 
     if (!(file instanceof File)) {
       return Response.json({ error: "Missing video file" }, { status: 400 });
@@ -47,6 +52,11 @@ export async function POST(req: NextRequest) {
       video_url: uploadedVideo.publicUrl,
       status: "queued",
       metadata: {
+        platform: typeof platform === "string" ? platform : null,
+        audience: typeof audience === "string" ? audience : null,
+        niche: typeof niche === "string" ? niche : null,
+        goal: typeof goal === "string" ? goal : null,
+        caption: typeof caption === "string" ? caption : null,
         storage_path: uploadedVideo.path,
         original_filename: file.name,
         content_type: file.type,

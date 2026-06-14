@@ -16,6 +16,11 @@ export type SaveOpenAIReportInput = {
   report: VideoAnalysisScore;
 };
 
+export type PaginatedAnalyses = {
+  analyses: Analysis[];
+  total: number;
+};
+
 function assertDatabaseResult<T>(data: T | null, error: { message: string } | null): T {
   if (error) {
     throw new Error(error.message);
@@ -109,6 +114,32 @@ export async function listAnalyses(profileId: string, limit = 20): Promise<Analy
   }
 
   return data;
+}
+
+export async function listAnalysesPage(
+  profileId: string,
+  page: number,
+  pageSize = 10,
+): Promise<PaginatedAnalyses> {
+  const supabase = createSupabaseAdminClient();
+  const currentPage = Math.max(page, 1);
+  const from = (currentPage - 1) * pageSize;
+  const to = from + pageSize - 1;
+  const { data, error, count } = await supabase
+    .from("analyses")
+    .select("*", { count: "exact" })
+    .eq("profile_id", profileId)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    analyses: data,
+    total: count ?? 0,
+  };
 }
 
 export async function updateAnalysis(

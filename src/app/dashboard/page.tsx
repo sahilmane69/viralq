@@ -11,10 +11,6 @@ function getStartOfMonth() {
 export default async function DashboardPage() {
   const user = await currentUser();
   const displayName = user?.firstName ?? user?.username ?? "there";
-  const initials =
-    user?.firstName || user?.lastName
-      ? `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase()
-      : (user?.username?.[0] ?? "U").toUpperCase();
   const analyses = user ? await listAnalyses(user.id, 50) : [];
   const completedAnalyses = analyses.filter((analysis) => analysis.status === "completed");
   const scoredAnalyses = analyses.filter((analysis) => typeof analysis.score === "number");
@@ -41,7 +37,6 @@ export default async function DashboardPage() {
       averageScore={averageScore}
       completedCount={completedAnalyses.length}
       displayName={displayName}
-      initials={initials}
       monthlyLimit={monthlyLimit}
       totalAnalyses={analyses.length}
       usedThisMonth={analysesThisMonth.length}
