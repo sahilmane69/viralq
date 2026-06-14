@@ -91,7 +91,7 @@ const steps = [
 
 function Icon({ children }: { children: ReactNode }) {
   return (
-    <div className="grid size-11 place-items-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300">
+    <div className="grid size-11 place-items-center rounded-xl bg-blue-50 text-blue-700">
       <svg
         aria-hidden="true"
         className="size-5"
@@ -123,8 +123,8 @@ export default function Home() {
         >
           <Chip
             classNames={{
-              base: "border border-blue-200 bg-blue-50/80 px-1 dark:border-blue-800 dark:bg-blue-950/50",
-              content: "font-semibold text-blue-700 dark:text-blue-300",
+              base: "border border-blue-200 bg-blue-50/80 px-1",
+              content: "font-semibold text-blue-700",
             }}
             radius="full"
             variant="flat"
@@ -132,11 +132,11 @@ export default function Home() {
             Creative intelligence for content teams
           </Chip>
 
-          <h1 className="mt-6 text-4xl font-semibold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-[4rem] dark:text-white">
+          <h1 className="mt-6 text-4xl font-semibold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-5xl lg:text-[4rem]">
             Know what makes your content{" "}
-            <span className="text-blue-600 dark:text-blue-400">perform.</span>
+            <span className="text-blue-600">perform.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
             ViralIQ turns short-form videos into clear, actionable insights so your team can create
             stronger content, faster.
           </p>
@@ -153,7 +153,7 @@ export default function Home() {
             </Button>
             <Button
               as={Link}
-              className="h-12 border-slate-300 bg-white px-7 font-semibold text-slate-800 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className="h-12 border-slate-300 bg-white px-7 font-semibold text-slate-800"
               href="#how-it-works"
               radius="lg"
               size="lg"
@@ -163,7 +163,7 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500">
             {["No credit card required", "First analysis free"].map((item) => (
               <span key={item} className="flex items-center gap-2">
                 <svg
@@ -188,16 +188,16 @@ export default function Home() {
           initial={{ opacity: 0, y: 18 }}
           transition={{ delay: 0.1, duration: 0.55, ease: "easeOut" }}
         >
-          <div className="absolute -inset-12 -z-10 rounded-full bg-blue-100/60 blur-3xl dark:bg-blue-900/20" />
-          <Card className="border border-slate-200 bg-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950">
+          <div className="absolute -inset-12 -z-10 rounded-full bg-blue-100/60 blur-3xl" />
+          <Card className="border border-slate-200 bg-white shadow-[0_28px_80px_-32px_rgba(15,23,42,0.35)]">
             <CardBody className="p-0">
-              <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+              <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="grid size-9 place-items-center rounded-lg bg-slate-950 text-xs font-bold text-white dark:bg-white dark:text-slate-950">
+                  <div className="grid size-9 place-items-center rounded-lg bg-slate-950 text-xs font-bold text-white">
                     VI
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <p className="text-sm font-semibold text-slate-900">
                       Campaign analysis
                     </p>
                     <p className="text-xs text-slate-500">Summer product launch</p>
@@ -230,19 +230,19 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="rounded-2xl border border-slate-200 p-4 dark:border-slate-800">
+                  <div className="rounded-2xl border border-slate-200 p-4">
                     <div className="flex items-end justify-between">
                       <div>
                         <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
                           ViralIQ score
                         </p>
-                        <p className="mt-1 text-4xl font-semibold tracking-tight text-slate-950 dark:text-white">
+                        <p className="mt-1 text-4xl font-semibold tracking-tight text-slate-950">
                           87<span className="text-base text-slate-400">/100</span>
                         </p>
                       </div>
                       <span className="text-sm font-semibold text-emerald-600">Strong</span>
                     </div>
-                    <div className="mt-4 h-2 rounded-full bg-slate-100 dark:bg-slate-800">
+                    <div className="mt-4 h-2 rounded-full bg-slate-100">
                       <div className="h-full w-[87%] rounded-full bg-blue-600" />
                     </div>
                   </div>
@@ -254,10 +254,10 @@ export default function Home() {
                   ].map(([label, value, width]) => (
                     <div key={label}>
                       <div className="mb-1.5 flex justify-between text-xs font-medium">
-                        <span className="text-slate-600 dark:text-slate-300">{label}</span>
-                        <span className="text-slate-900 dark:text-white">{value}</span>
+                        <span className="text-slate-600">{label}</span>
+                        <span className="text-slate-900">{value}</span>
                       </div>
-                      <div className="h-1.5 rounded-full bg-slate-100 dark:bg-slate-800">
+                      <div className="h-1.5 rounded-full bg-slate-100">
                         <div className={`h-full rounded-full bg-blue-600 ${width}`} />
                       </div>
                     </div>
@@ -265,7 +265,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mx-5 mb-5 flex gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900 dark:bg-emerald-950/30">
+              <div className="mx-5 mb-5 flex gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
                 <svg
                   className="mt-0.5 size-5 shrink-0 text-emerald-600"
                   fill="none"
@@ -275,7 +275,7 @@ export default function Home() {
                 >
                   <path d="m9 18 6-6-6-6" />
                 </svg>
-                <p className="text-sm leading-6 text-emerald-900 dark:text-emerald-200">
+                <p className="text-sm leading-6 text-emerald-900">
                   <strong>Top opportunity:</strong> Move the product reveal 2 seconds earlier to
                   strengthen the opening payoff.
                 </p>
@@ -285,16 +285,16 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section id="features" className="border-y border-slate-200/80 bg-white py-24 dark:border-slate-800 dark:bg-slate-950">
+      <section id="features" className="border-y border-slate-200/80 bg-white py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-blue-600">
               Everything you need
             </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
               Better creative decisions, backed by data
             </h2>
-            <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
+            <p className="mt-4 text-base leading-7 text-slate-600">
               Understand what is working, what is not, and what to improve before your next post.
             </p>
           </div>
@@ -303,14 +303,14 @@ export default function Home() {
             {features.map((feature) => (
               <Card
                 key={feature.title}
-                className="border border-slate-200 bg-white shadow-none transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950"
+                className="border border-slate-200 bg-white shadow-none transition-transform duration-200 hover:-translate-y-1"
               >
                 <CardBody className="p-6">
                   <Icon>{feature.icon}</Icon>
-                  <h3 className="mt-5 text-lg font-semibold text-slate-950 dark:text-white">
+                  <h3 className="mt-5 text-lg font-semibold text-slate-950">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
                     {feature.description}
                   </p>
                 </CardBody>
@@ -326,22 +326,22 @@ export default function Home() {
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-blue-600">
               How it works
             </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl dark:text-white">
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
               From upload to insight in minutes
             </h2>
           </div>
 
           <div className="relative mt-16 grid gap-8 md:grid-cols-3">
-            <div className="absolute left-[16.6%] right-[16.6%] top-7 hidden border-t border-dashed border-slate-300 md:block dark:border-slate-700" />
+            <div className="absolute left-[16.6%] right-[16.6%] top-7 hidden border-t border-dashed border-slate-300 md:block" />
             {steps.map((step) => (
               <div key={step.number} className="relative text-center">
-                <span className="relative z-10 mx-auto grid size-14 place-items-center rounded-2xl border border-blue-200 bg-white text-sm font-bold text-blue-600 shadow-sm dark:border-blue-800 dark:bg-slate-950">
+                <span className="relative z-10 mx-auto grid size-14 place-items-center rounded-2xl border border-blue-200 bg-white text-sm font-bold text-blue-600 shadow-sm">
                   {step.number}
                 </span>
-                <h3 className="mt-6 text-lg font-semibold text-slate-950 dark:text-white">
+                <h3 className="mt-6 text-lg font-semibold text-slate-950">
                   {step.title}
                 </h3>
-                <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-600 dark:text-slate-400">
+                <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-600">
                   {step.description}
                 </p>
               </div>
@@ -351,7 +351,7 @@ export default function Home() {
       </section>
 
       <section id="cta" className="px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-slate-950 px-6 py-16 text-center sm:px-12 dark:bg-blue-950">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-3xl bg-slate-950 px-6 py-16 text-center sm:px-12">
           <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
             Make every video a smarter creative decision.
           </h2>

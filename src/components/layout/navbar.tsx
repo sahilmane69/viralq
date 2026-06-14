@@ -1,5 +1,4 @@
 import { Button, Link } from "@heroui/react";
-import { ThemeToggle } from "./theme-toggle";
 
 const navigationItems = [
   { label: "Features", href: "#features" },
@@ -9,12 +8,12 @@ const navigationItems = [
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/72">
+    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl">
       <nav
         aria-label="Main navigation"
         className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
       >
-        <Link className="flex items-center gap-3 text-slate-950 dark:text-white" href="/">
+        <Link className="flex items-center gap-3 text-slate-950" href="/">
           <span className="grid size-9 place-items-center rounded-xl bg-blue-600 text-white">
             <svg
               aria-hidden="true"
@@ -36,7 +35,7 @@ export function Navbar() {
           {navigationItems.map((item) => (
             <Link
               key={item.href}
-              className="text-sm font-medium text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white"
+              className="text-sm font-medium text-slate-600 hover:text-slate-950"
               href={item.href}
             >
               {item.label}
@@ -45,7 +44,6 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Button
             as={Link}
             className="hidden bg-blue-600 px-5 font-semibold text-white sm:inline-flex"
