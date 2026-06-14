@@ -2,6 +2,7 @@
 
 import { UserButton, useUser } from "@clerk/nextjs";
 import { Button, Link } from "@heroui/react";
+import Image from "next/image";
 
 const navigationItems = [
   { label: "Features", href: "#features" },
@@ -19,19 +20,8 @@ export function Navbar() {
         className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
       >
         <Link className="flex items-center gap-3 text-slate-950" href="/">
-          <span className="grid size-9 place-items-center rounded-xl bg-blue-600 text-white">
-            <svg
-              aria-hidden="true"
-              className="size-5"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="m5 7 4 10 3-7 3 7 4-10" />
-            </svg>
+          <span className="grid size-9 place-items-center overflow-hidden rounded-xl bg-blue-600">
+            <Image alt="" className="size-full object-cover" height={36} src="/viralq-logo.png" width={36} />
           </span>
           <span className="text-base font-semibold tracking-normal">ViralIQ</span>
         </Link>

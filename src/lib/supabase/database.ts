@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "./admin";
+import type { VideoAnalysisScore } from "@/lib/openai/service";
 import type { Json, Tables, TablesInsert, TablesUpdate } from "@/types/database";
 
 export type Profile = Tables<"profiles">;
@@ -9,6 +10,16 @@ export type UpsertProfileInput = TablesInsert<"profiles">;
 export type CreateAnalysisInput = Omit<TablesInsert<"analyses">, "profile_id">;
 export type UpdateAnalysisInput = TablesUpdate<"analyses">;
 export type UpsertReportInput = Omit<TablesInsert<"reports">, "profile_id">;
+
+export type SaveOpenAIReportInput = {
+  analysisId: string;
+  report: VideoAnalysisScore;
+};
+
+export type PaginatedAnalyses = {
+  analyses: Analysis[];
+  total: number;
+};
 
 function assertDatabaseResult<T>(data: T | null, error: { message: string } | null): T {
   if (error) {
@@ -105,6 +116,32 @@ export async function listAnalyses(profileId: string, limit = 20): Promise<Analy
   return data;
 }
 
+export async function listAnalysesPage(
+  profileId: string,
+  page: number,
+  pageSize = 10,
+): Promise<PaginatedAnalyses> {
+  const supabase = createSupabaseAdminClient();
+  const currentPage = Math.max(page, 1);
+  const from = (currentPage - 1) * pageSize;
+  const to = from + pageSize - 1;
+  const { data, error, count } = await supabase
+    .from("analyses")
+    .select("*", { count: "exact" })
+    .eq("profile_id", profileId)
+    .order("created_at", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    analyses: data,
+    total: count ?? 0,
+  };
+}
+
 export async function updateAnalysis(
   profileId: string,
   analysisId: string,
@@ -131,6 +168,29 @@ export async function upsertReport(profileId: string, input: UpsertReportInput):
     .single();
 
   return assertDatabaseResult(data, error);
+}
+
+export async function saveOpenAIReport(
+  profileId: string,
+  input: SaveOpenAIReportInput,
+): Promise<Report> {
+  const reportJson = input.report as unknown as Json;
+
+  return upsertReport(profileId, {
+    analysis_id: input.analysisId,
+    summary: [
+      input.report.strengths[0] ? `Strength: ${input.report.strengths[0]}` : null,
+      input.report.weaknesses[0] ? `Weakness: ${input.report.weaknesses[0]}` : null,
+    ]
+      .filter(Boolean)
+      .join(" "),
+    hook_score: Math.round(input.report.hookScore),
+    pacing_score: Math.round(input.report.retentionScore),
+    clarity_score: Math.round(input.report.contentQualityScore),
+    share_score: Math.round(input.report.engagementScore),
+    recommendations: input.report.recommendations as unknown as Json,
+    raw_report: reportJson,
+  });
 }
 
 export async function getReportByAnalysis(

@@ -2,7 +2,6 @@
 
 import { UserButton } from "@clerk/nextjs";
 import {
-  Avatar,
   Button,
   Card,
   CardBody,
@@ -16,31 +15,29 @@ import {
   Progress,
   useDisclosure,
 } from "@heroui/react";
+import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
 const menuItems = [
   { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
   { label: "New Analysis", icon: "plus", href: "/dashboard/new-analysis" },
-  { label: "History", icon: "history", href: "/dashboard" },
-  { label: "Profile", icon: "profile", href: "/dashboard" },
-  { label: "Settings", icon: "settings", href: "/dashboard" },
-];
-
-const recentAnalyses = [
-  { name: "Summer product launch", date: "Jun 12, 2026", score: 87, status: "Complete" },
-  { name: "Founder story hook", date: "Jun 10, 2026", score: 78, status: "Complete" },
-  { name: "Feature walkthrough", date: "Jun 8, 2026", score: 91, status: "Complete" },
-];
-
-const statCards = [
-  { label: "Total analyses", value: "24", detail: "6 this month", icon: "analysis" },
-  { label: "Average score", value: "84", detail: "+4.2% from last month", icon: "score" },
-  { label: "Videos improved", value: "18", detail: "75% implementation rate", icon: "improved" },
+  { label: "History", icon: "history", href: "/dashboard/history" },
 ];
 
 type DashboardClientProps = {
+  analyses: {
+    id: string;
+    title: string;
+    createdAt: string;
+    score: number | null;
+    status: "queued" | "processing" | "completed" | "failed";
+  }[];
+  averageScore: number | null;
+  completedCount: number;
   displayName: string;
-  initials: string;
+  monthlyLimit: number;
+  totalAnalyses: number;
+  usedThisMonth: number;
 };
 
 function NavIcon({ name }: { name: string }) {
@@ -106,19 +103,8 @@ function NavIcon({ name }: { name: string }) {
 function Brand() {
   return (
     <Link className="flex items-center gap-3 text-slate-950" href="/">
-      <span className="grid size-9 place-items-center rounded-xl bg-blue-600 text-white">
-        <svg
-          aria-hidden="true"
-          className="size-5"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="m5 7 4 10 3-7 3 7 4-10" />
-        </svg>
+      <span className="grid size-9 place-items-center overflow-hidden rounded-xl bg-blue-600">
+        <Image alt="" className="size-full object-cover" height={36} src="/viralq-logo.png" width={36} />
       </span>
       <span className="font-semibold">ViralIQ</span>
     </Link>
@@ -127,11 +113,18 @@ function Brand() {
 
 function SidebarContent({
   activeItem,
+  monthlyLimit,
   onSelect,
+  usedThisMonth,
 }: {
   activeItem: string;
+  monthlyLimit: number;
   onSelect: (item: string) => void;
+  usedThisMonth: number;
 }) {
+  const remainingAnalyses = Math.max(monthlyLimit - usedThisMonth, 0);
+  const monthlyUsagePercent = monthlyLimit ? (usedThisMonth / monthlyLimit) * 100 : 0;
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-16 items-center px-6">
@@ -166,16 +159,20 @@ function SidebarContent({
           <CardBody className="p-4">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-slate-700">Monthly usage</span>
-              <span className="text-slate-500">24 / 50</span>
+              <span className="text-slate-500">
+                {usedThisMonth} / {monthlyLimit}
+              </span>
             </div>
             <Progress
               aria-label="Monthly usage"
               className="mt-3"
               color="primary"
               size="sm"
-              value={48}
+              value={monthlyUsagePercent}
             />
-            <p className="mt-3 text-xs leading-5 text-slate-500">26 analyses remaining</p>
+            <p className="mt-3 text-xs leading-5 text-slate-500">
+              {remainingAnalyses} analyses remaining
+            </p>
           </CardBody>
         </Card>
       </div>
@@ -183,9 +180,49 @@ function SidebarContent({
   );
 }
 
-export function DashboardClient({ displayName, initials }: DashboardClientProps) {
+function formatDate(date: string) {
+  return new Intl.DateTimeFormat("en", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(date));
+}
+
+function formatStatus(status: DashboardClientProps["analyses"][number]["status"]) {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+export function DashboardClient({
+  analyses,
+  averageScore,
+  completedCount,
+  displayName,
+  monthlyLimit,
+  totalAnalyses,
+  usedThisMonth,
+}: DashboardClientProps) {
   const [activeItem, setActiveItem] = useState("Dashboard");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const statCards = [
+    {
+      label: "Total analyses",
+      value: totalAnalyses.toString(),
+      detail: `${usedThisMonth} this month`,
+      icon: "analysis",
+    },
+    {
+      label: "Average score",
+      value: averageScore?.toString() ?? "-",
+      detail: averageScore === null ? "No completed scores yet" : "Across scored analyses",
+      icon: "score",
+    },
+    {
+      label: "Completed analyses",
+      value: completedCount.toString(),
+      detail: totalAnalyses ? `${Math.round((completedCount / totalAnalyses) * 100)}% complete` : "No analyses yet",
+      icon: "improved",
+    },
+  ];
 
   const selectItem = (item: string) => {
     setActiveItem(item);
@@ -194,7 +231,12 @@ export function DashboardClient({ displayName, initials }: DashboardClientProps)
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-slate-200 bg-white lg:block">
-        <SidebarContent activeItem={activeItem} onSelect={selectItem} />
+        <SidebarContent
+          activeItem={activeItem}
+          monthlyLimit={monthlyLimit}
+          onSelect={selectItem}
+          usedThisMonth={usedThisMonth}
+        />
       </aside>
 
       <Drawer isOpen={isOpen} onOpenChange={onOpenChange} placement="left" size="xs">
@@ -205,10 +247,12 @@ export function DashboardClient({ displayName, initials }: DashboardClientProps)
               <DrawerBody className="p-0">
                 <SidebarContent
                   activeItem={activeItem}
+                  monthlyLimit={monthlyLimit}
                   onSelect={(item) => {
                     selectItem(item);
                     onClose();
                   }}
+                  usedThisMonth={usedThisMonth}
                 />
               </DrawerBody>
             </>
@@ -325,10 +369,11 @@ export function DashboardClient({ displayName, initials }: DashboardClientProps)
                     </Button>
                   </div>
                   <Divider />
-                  <div className="divide-y divide-slate-100">
-                    {recentAnalyses.map((analysis) => (
+                  {analyses.length ? (
+                    <div className="divide-y divide-slate-100">
+                      {analyses.slice(0, 5).map((analysis) => (
                       <div
-                        key={analysis.name}
+                        key={analysis.id}
                         className="flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6"
                       >
                         <div className="flex min-w-0 items-center gap-3">
@@ -345,47 +390,52 @@ export function DashboardClient({ displayName, initials }: DashboardClientProps)
                             </svg>
                           </div>
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold">{analysis.name}</p>
-                            <p className="mt-1 text-xs text-slate-500">{analysis.date}</p>
+                            <p className="truncate text-sm font-semibold">{analysis.title}</p>
+                            <p className="mt-1 text-xs text-slate-500">
+                              {formatDate(analysis.createdAt)}
+                            </p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between gap-4 sm:justify-end">
-                          <Chip color="success" size="sm" variant="flat">
-                            {analysis.status}
+                          <Chip
+                            color={analysis.status === "failed" ? "danger" : "success"}
+                            size="sm"
+                            variant="flat"
+                          >
+                            {formatStatus(analysis.status)}
                           </Chip>
                           <div className="min-w-12 text-right">
-                            <p className="text-lg font-semibold">{analysis.score}</p>
+                            <p className="text-lg font-semibold">{analysis.score ?? "-"}</p>
                             <p className="text-[10px] uppercase tracking-wide text-slate-400">
                               Score
                             </p>
                           </div>
-                          <Button
-                            isIconOnly
-                            aria-label={`Open ${analysis.name}`}
-                            size="sm"
-                            variant="light"
-                          >
-                            <svg
-                              className="size-4 text-slate-500"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                            >
-                              <path d="m9 18 6-6-6-6" />
-                            </svg>
-                          </Button>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="px-5 py-12 text-center sm:px-6">
+                      <p className="text-sm font-semibold text-slate-700">No analyses yet</p>
+                      <p className="mt-2 text-sm text-slate-500">
+                        Upload a video to create your first report.
+                      </p>
+                      <Button
+                        as={Link}
+                        className="mt-5 bg-blue-600 font-semibold text-white"
+                        href="/dashboard/new-analysis"
+                        radius="lg"
+                      >
+                        Start analysis
+                      </Button>
+                    </div>
+                  )}
                 </CardBody>
               </Card>
 
               <Card className="border border-slate-200 shadow-none">
                 <CardBody className="p-6">
-                  <Avatar className="bg-blue-600 text-white" name={initials} />
-                  <h2 className="mt-5 text-lg font-semibold">Analyze a new video</h2>
+                  <h2 className="text-lg font-semibold">Analyze a new video</h2>
                   <p className="mt-2 text-sm leading-6 text-slate-500">
                     Upload your latest short-form video and get a clear performance report in
                     minutes.
