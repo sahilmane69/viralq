@@ -6,7 +6,6 @@ const config: Config = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
@@ -25,14 +24,6 @@ const config: Config = {
             primary: {
               DEFAULT: "#2563eb",
               foreground: "#ffffff",
-            },
-          },
-        },
-        dark: {
-          colors: {
-            primary: {
-              DEFAULT: "#60a5fa",
-              foreground: "#020617",
             },
           },
         },
